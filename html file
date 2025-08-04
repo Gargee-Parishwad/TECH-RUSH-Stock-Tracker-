@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Real-Time Stock Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="tracker">
+    <h1 style="text-align: center;">📈 Stock Tracker</h1>
+    <form action="">
+      <input type="search" id="symbol" style="width: 60%;text-align: center;line-height: 60%;padding: 20px;" placeholder="Search here...">>
+      <i class="fa fa-search"></i>
+    </form>
+    <button style="padding: 20px;"  onclick="getStockData()">Track</button>
+    <div class="result" id="result">
+      <!-- Stock data will appear here -->
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+  <style src="styles.css"></style>
+</body>
+</html>

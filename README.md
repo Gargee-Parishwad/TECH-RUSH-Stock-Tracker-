@@ -1,1 +1,0 @@
-# TECH-RUSH-Stock-Tracker-
