@@ -1,14 +1,13 @@
-// script.js
-
-const API_KEY = "e2d5347462894735ab48945ad36dbc85";
+const API_KEY = "d29lr91r01qvhsftvf50d29lr91r01qvhsftvf5g"; // Replace with your real Finnhub API key
 let stockChart = null;
 let refreshTimer = null;
 
 async function getStockData() {
   const symbol = document.getElementById("symbol").value.trim().toUpperCase();
   const resultDiv = document.getElementById("result");
+
   if (!symbol) {
-    resultDiv.innerHTML = "⚠️ Please enter a stock symbol.";
+    resultDiv.innerHTML = "⚠ Please enter a stock symbol.";
     return;
   }
 
@@ -18,25 +17,35 @@ async function getStockData() {
     const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${API_KEY}`;
     const resp = await fetch(url);
     const data = await resp.json();
-    // data.c = current price, data.dp = percent change
+
+    // Check for valid data
     if (data.c === 0 && data.o === 0 && data.pc === 0) {
       resultDiv.innerHTML = "❌ Invalid symbol or no data.";
       return;
     }
 
-    const now = new Date().toLocaleTimeString();
-    const price = parseFloat(data.c).toFixed(2);
-    const pct  = parseFloat(data.dp).toFixed(2);
+   const now = new Date().toLocaleTimeString();
+const price = parseFloat(data.c);
+const pct = parseFloat(data.dp);
+const high = parseFloat(data.h);
+const low = parseFloat(data.l);
+// const volume = parseFloat(data.v); // Only if available from another endpoint
 
-    // show latest
-    resultDiv.innerHTML = `
-      ✅ <strong>${symbol}</strong><br>
-      💰 Price: $${price}<br>
-      📈 Change: ${pct}%<br>
-      🕒 ${now}
-    `;
+if (isNaN(price) || isNaN(pct) || isNaN(high) || isNaN(low)) {
+  resultDiv.innerHTML = "❌ Invalid symbol or missing data.";
+  return;
+}
 
-    // update chart
+resultDiv.innerHTML = `
+   <strong>${symbol}</strong><br>
+   PRICE: $${price.toFixed(2)}<br>
+   CHANGE: ${pct.toFixed(2)}%<br>
+   HIGH: $${high.toFixed(2)}<br>
+   LOW: $${low.toFixed(2)}<br>
+   ${now}
+`;
+
+
     updateChart(symbol, now, price);
   } catch (err) {
     console.error(err);
@@ -45,8 +54,8 @@ async function getStockData() {
 }
 
 function updateChart(symbol, label, price) {
-  // lazy-create canvas if needed
   let canvas = document.getElementById("priceChart");
+
   if (!canvas) {
     canvas = document.createElement("canvas");
     canvas.id = "priceChart";
@@ -54,6 +63,7 @@ function updateChart(symbol, label, price) {
     canvas.style.height = "300px";
     document.querySelector(".tracker").appendChild(canvas);
   }
+
   const ctx = canvas.getContext("2d");
 
   if (!stockChart) {
@@ -77,7 +87,7 @@ function updateChart(symbol, label, price) {
           y: {
             beginAtZero: false,
             ticks: {
-              callback: v => `$${v}`
+              callback: (v) => `$${v}`
             }
           }
         }
@@ -91,13 +101,9 @@ function updateChart(symbol, label, price) {
 }
 
 function startTracking() {
-  // clear old timer
   if (refreshTimer) clearInterval(refreshTimer);
-
-  // fetch immediately, then every 60s
   getStockData();
-  refreshTimer = setInterval(getStockData, 60_000);
+  refreshTimer = setInterval(getStockData, 60000); // refresh every 60 seconds
 }
 
-// wire up your "Track" button
 document.querySelector("button").addEventListener("click", startTracking);
