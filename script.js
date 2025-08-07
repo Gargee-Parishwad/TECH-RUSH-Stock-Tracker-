@@ -1,4 +1,4 @@
-const API_KEY = "d29lr91r01qvhsftvf50d29lr91r01qvhsftvf5g"; // Replace with your real Finnhub API key
+const API_KEY = "d2aa2v1r01qoad6oq920d2aa2v1r01qoad6oq92g"; // Replace with your real Finnhub API key
 let stockChart = null;
 let refreshTimer = null;
 
@@ -107,3 +107,4 @@ function startTracking() {
 }
 
 document.querySelector("button").addEventListener("click", startTracking);
+
